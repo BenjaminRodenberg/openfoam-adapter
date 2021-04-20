@@ -44,16 +44,16 @@ bool preciceAdapter::Adapter::configFileRead()
     // NOTE: lookupType<T>("name") is deprecated in openfoam.com since v1812,
     // which recommends get<T>("name") instead. However, get<T>("name")
     // is not implemented in openfoam.org at the moment.
-    preciceConfigFilename_ = preciceDict.lookupType<fileName>("preciceConfig");
+    preciceConfigFilename_ = preciceDict.lookupType<fileName>("preciceConfig"); // We use this deprecated lookupType<>() for backwards compatibility
     DEBUG(adapterInfo("  precice-config-file : " + preciceConfigFilename_));
 
     // Read and display the participant name
-    participantName_ = preciceDict.lookupType<word>("participant");
+    participantName_ = preciceDict.lookupType<word>("participant"); // We use this deprecated lookupType<>() for backwards compatibility
     DEBUG(adapterInfo("  participant name    : " + participantName_));
 
     // Read and display the list of modules
     DEBUG(adapterInfo("  modules requested   : "));
-    wordList modules_ = preciceDict.lookupType<wordList>("modules");
+    wordList modules_ = preciceDict.lookupType<wordList>("modules"); // We use this deprecated lookupType<>() for backwards compatibility
     for (auto module : modules_)
     {
         DEBUG(adapterInfo("  - " + module + "\n"));
@@ -67,7 +67,7 @@ bool preciceAdapter::Adapter::configFileRead()
     // Every interface is a subdictionary of "interfaces",
     // each with an arbitrary name. Read all of them and create
     // a list (here: pointer) of dictionaries.
-    const dictionary * interfaceDictPtr = preciceDict.subDictPtr("interfaces");
+    const dictionary * interfaceDictPtr = preciceDict.subDictPtr("interfaces"); // We use this deprecated subDictPtr for backwards compatibility
     DEBUG(adapterInfo("  interfaces : "));
 
     // Check if we found any interfaces
@@ -86,7 +86,7 @@ bool preciceAdapter::Adapter::configFileRead()
                 dictionary interfaceDict = interfaceDictEntry.dict();
                 struct InterfaceConfig interfaceConfig;
 
-                interfaceConfig.meshName = interfaceDict.lookupType<word>("mesh");
+                interfaceConfig.meshName = interfaceDict.lookupType<word>("mesh"); // We use this deprecated lookupType<>() for backwards compatibility
                 DEBUG(adapterInfo("  - mesh         : " + interfaceConfig.meshName));
 
                 // By default, assume "faceCenters" as locationsType
@@ -100,13 +100,13 @@ bool preciceAdapter::Adapter::configFileRead()
                 {
                     DEBUG(adapterInfo("Mesh connectivity is not supported for faceCenters. \n"
                                       "Please configure the desired interface with the locationsType faceNodes. \n"
-                                      "Have a look in the adapter wiki on Github or the tutorial case for detailed information.", "warning"));
+                                      "Have a look in the adapter documentation for detailed information.", "warning"));
                     return false;
                 }
                 DEBUG(adapterInfo("    connectivity : " + std::to_string(interfaceConfig.meshConnectivity)));
               
                 DEBUG(adapterInfo("    patches      : "));
-                wordList patches = interfaceDict.lookupType<wordList>("patches");
+                wordList patches = interfaceDict.lookupType<wordList>("patches"); // We use this deprecated lookupType<>() for backwards compatibility
                 for (auto patch : patches)
                 {
                     interfaceConfig.patchNames.push_back(patch);
@@ -114,7 +114,7 @@ bool preciceAdapter::Adapter::configFileRead()
                 }
               
                 DEBUG(adapterInfo("    writeData    : "));
-                wordList writeData = interfaceDict.lookupType<wordList>("writeData");
+                wordList writeData = interfaceDict.lookupType<wordList>("writeData"); // We use this deprecated lookupType<>() for backwards compatibility
                 for (auto writeDatum : writeData)
                 {
                     interfaceConfig.writeData.push_back(writeDatum);
@@ -122,7 +122,7 @@ bool preciceAdapter::Adapter::configFileRead()
                 }
 
                 DEBUG(adapterInfo("    readData     : "));
-                wordList readData = interfaceDict.lookupType<wordList>("readData");
+                wordList readData = interfaceDict.lookupType<wordList>("readData");  // We use this deprecated lookupType<>() for backwards compatibility
                 for (auto readDatum : readData)
                 {
                     interfaceConfig.readData.push_back(readDatum);
@@ -156,7 +156,7 @@ bool preciceAdapter::Adapter::configFileRead()
                     "Mesh connectivity is not supported for FSI, as, usually, "
                     "the Solid participant needs to provide the connectivity information. "
                     "Therefore, set provideMeshConnectivity = false. "
-                    "Have a look in the tutorial README or the Github wiki for detailed information. "
+                    "Have a look in the adapter documentation for more information. "
                     ,"warning");
                 return false;
             }
